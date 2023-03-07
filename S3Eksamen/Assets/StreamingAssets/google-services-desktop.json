@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "558965497550",
+    "project_id": "scoop-f6849",
+    "storage_bucket": "scoop-f6849.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558965497550:android:6a7f8bbcd5ab7352247a9f",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.S3Eksamen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558965497550-62pcgl69q4q21ppbkl10rjto7lvjeka3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd92xiTvNyYL5f2ghYUZ7FEZO8UoSoymk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558965497550-62pcgl69q4q21ppbkl10rjto7lvjeka3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
