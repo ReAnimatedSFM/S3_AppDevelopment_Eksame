@@ -55,7 +55,6 @@ public class GenericRepository<TEntity>
 
         CollectionReference listRef = firestore.Collection(collection);
 
-
         Debug.Log("Starting task");
 
 

@@ -31,6 +31,8 @@ public class SceneManagement : MonoBehaviour
 
         FirebaseData.SetFirebaseData();
 
+        FirebaseManager.Instance.SetUserData();
+
         GameMasterData.SetGMInstance();
 
         while (!asyncLoad.isDone)

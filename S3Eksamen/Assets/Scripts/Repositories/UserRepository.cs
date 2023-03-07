@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class UserRepository : GenericRepository<User>
 {
-    private string UserId;
-
     public IEnumerable<User> GetUser(string id, List<Dictionary<string, object>> keyValuePairs)
     {
         if (keyValuePairs == null)
