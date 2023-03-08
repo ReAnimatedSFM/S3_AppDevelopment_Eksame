@@ -7,29 +7,51 @@ using UnityEngine;
 
 public class FruitRepository : GenericRepository<Fruit>
 {
-    public List<Fruit> Fruits;
+    public static FruitRepository Instance
+    {
+        get { return instance; }
+        set 
+        { 
+            if (instance == null) 
+            { 
+                value = new FruitRepository();
+                instance = value;
+            }
+        }
+    }
 
-    public GameObject BananaPrefab, PineapplePrefab, WatermelonPrefab,
-        ApplePrefab;
+    private static FruitRepository instance;
+
+    public static Fruit[] Fruits = new Fruit[4];
+
+    public FruitObject[] fruitObjects;
+
+    private static int counter = 0;
 
     /// <summary>
     /// Adds fruits from firestore to List: Fruits
     /// </summary>
-    public void InitializeFruits()
+    public IEnumerator<Fruit[]> InitializeFruits()
     {
         var firestore = FirebaseFirestore.DefaultInstance;
 
         Query fruitQuery = firestore.Collection("Fruits");
 
-        fruitQuery.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        Task<Fruit[]> returnTask = Task.Run(() =>
+            fruitQuery.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
+            Debug.Log("Initializing fruits");
             QuerySnapshot querySnapshot = task.Result;
             foreach (DocumentSnapshot documentSnapshot in querySnapshot.Documents)
             {
                 Fruit fruit = documentSnapshot.ConvertTo<Fruit>();
-                Fruits.Add(fruit);
+                Fruits[counter] = fruit;
+                counter++;
             }
-        });
+            return Fruits;
+        }));
+
+        yield return returnTask.Result;
     }
 
     /// <summary>
@@ -39,7 +61,7 @@ public class FruitRepository : GenericRepository<Fruit>
     /// <returns></returns>
     public Fruit[] GetFruitArrayBySpecifiedAmount(int amount)
     {
-        if (Fruits.Count <= 0)
+        if (Fruits.Length == 0)
             InitializeFruits();
 
         Fruit[] fruitsToReturn = new Fruit[amount];
@@ -54,17 +76,24 @@ public class FruitRepository : GenericRepository<Fruit>
         return fruitsToReturn;
     }
 
-    public FruitObject[] GetFruitPrefabArray(int amount)
+    public IEnumerator RunGetFunc(MonoBehaviour owner, int amount)
     {
-        if (Fruits.Count <= 0)
-            InitializeFruits();
+        CoroutineWithData cd = new CoroutineWithData(owner, InitializeFruits());
 
+        yield return cd.coroutine;
+
+        fruitObjects = GetFruitPrefabArray(amount, (Fruit[])cd.result);
+    }
+
+    public FruitObject[] GetFruitPrefabArray(int amount, Fruit[] frtArray)
+    {
         var fruitPrefabArray = new FruitObject[amount];
 
         for (int i = 0; i < amount; i++)
         {
             int index = Random.Range(0, 3);
-            Fruit rndFruit = Fruits[index];
+            Fruit rndFruit = frtArray[index];
+
             switch (rndFruit.Name)
             {
                 case "Banana":
@@ -96,6 +125,7 @@ public class FruitRepository : GenericRepository<Fruit>
             }
 
         }
+
         return fruitPrefabArray;
     }
 }

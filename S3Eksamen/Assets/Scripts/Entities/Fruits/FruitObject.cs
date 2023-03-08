@@ -1,12 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FruitObject : MonoBehaviour
 {
-    public Fruit thisFruit;
+    [HideInInspector] public Fruit thisFruit;
 
-    public bool isDead;
+    [HideInInspector] public Renderer thisRenderer;
+
+    [HideInInspector] public Material[] Materials;
+
+    [HideInInspector] public bool isDead = false;
 
     private bool readyToRespawn;
 
@@ -14,8 +20,13 @@ public class FruitObject : MonoBehaviour
 
     private void Awake()
     {
-        isDead = false;
         readyToRespawn = false;
+    }
+
+    private void Start()
+    {
+        thisRenderer = GetComponent<Renderer>();
+        Materials = thisRenderer.materials;
     }
 
     // Update is called once per frame
@@ -49,6 +60,7 @@ public class FruitObject : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            PointHandler.Instance.AddToScore(thisFruit.Points);
             Invoke(nameof(SetReadyToRespawn), 2f * Time.fixedDeltaTime);
         }
     }
@@ -70,4 +82,5 @@ public class FruitObject : MonoBehaviour
     {
         transform.position = new Vector3(transform.position.x, fallSpeed, transform.position.z);
     }
+
 }
